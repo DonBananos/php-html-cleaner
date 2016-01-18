@@ -7,7 +7,7 @@
  */
 class Html_cleaner
 {
-	private $test_string = "<p>A <b>Test</b> String<br/><ul><li>Test Point</li><li>Test Point2</li></ul></p>";
+	private $test_string = "<p>A <b>Test</b> String<br/><ul><li>Test Point</li><li>Test Point2</li></ul><script>alert('Evil Cross-site Script!');</script><br/><a href='./'>A good link</a></p>";
 	private $whitelist = array("p", "b", "ul", "li", "u", "a", "ol", "img", "i", "br", "/p", "/b", "/ul", "/li", "/u", "/a", "/ol", "/i", "br/", "br /");
 	private $string_to_clean = "";
 	//Setting the allowed img attributes
@@ -20,12 +20,20 @@ class Html_cleaner
 
 	function __construct()
 	{
-		echo "<h2>You've envoked the html_cleaner class. Initiate testing punk</h2><br/>";
+		echo "<h2>You've envoked the html_cleaner class. Initiate testing</h2><br/>";
 		$this->set_attributes_for_a();
 		$this->set_attributes_for_img();
 	}
 
-	public function start_cleaning($string_to_clean, $whitelist)
+	/**
+	 * Function that starts the cleaning!
+	 * 
+	 * @param string $string_to_clean		The String that needs cleaning
+	 * @param array $whitelist				An array of whitelisted html tags
+	 * @param type $nl2br					Boolean, TRUE changes \n to <br/>, FALSE does not
+	 * @return String						Returns the cleaned string			
+	 */
+	public function start_cleaning($string_to_clean, $whitelist, $nl2br = FALSE)
 	{
 		if (empty($string_to_clean))
 		{
@@ -33,7 +41,14 @@ class Html_cleaner
 		}
 		else
 		{
-			$this->string_to_clean = $string_to_clean;
+			if($nl2br)
+			{
+				$this->string_to_clean = nl2br($string_to_clean);
+			}
+			else
+			{
+				$this->string_to_clean = $string_to_clean;
+			}
 		}
 		if (empty($whitelist))
 		{
@@ -46,14 +61,17 @@ class Html_cleaner
 		return $this->cleaner();
 	}
 
+	/**
+	 * Function that loops through the entire string, looking for parts to clean
+	 * 
+	 * @return String		The cleaned String
+	 */
 	private function cleaner()
 	{
 		$clean_string = "";
-		/*
-		  OBS! Need to be able to hande <someWhiteListTag> + ="jadadadad
-		 */
 		for ($i = 0; $i < strlen($this->string_to_clean); $i++)
 		{
+			$clean_occurance = NULL;
 			/* Does the index contain the string "<" ? */
 			if ($this->string_to_clean[$i] === "<")
 			{
@@ -87,6 +105,12 @@ class Html_cleaner
 		return $clean_string;
 	}
 
+	/**
+	 * Function that cleans a specific occurance - The real cleaner
+	 * 
+	 * @param String $occurance			The Part of the string that needs cleaning
+	 * @return String $clean_occurance	The cleaned part of the string
+	 */
 	private function clean_occurance($occurance)
 	{
 		$cleaned = FALSE;
@@ -116,6 +140,13 @@ class Html_cleaner
 		return $clean_occurance;
 	}
 
+	/**
+	 * Function that checks if the part to clean may be allowed to have attributes
+	 * 
+	 * @param String $occurance		Part of a string, that might have attributes
+	 * @return boolean				True if the string has allowed attributes, 
+	 *								false if not accepted tag or not accepted attributes
+	 */
 	private function check_if_blacklisted_for_values($occurance)
 	{
 		if (in_array("img", $this->whitelist))
@@ -160,6 +191,9 @@ class Html_cleaner
 		}
 	}
 
+	/**
+	 * Function to fill an array of allowed attributes in an img tag
+	 */
 	private function set_attributes_for_img()
 	{
 		/*
@@ -173,6 +207,9 @@ class Html_cleaner
 		$this->img_values[] = "width";
 	}
 
+	/**
+	 * Function to fill an array of allowed attributes in an a tag
+	 */
 	private function set_attributes_for_a()
 	{
 		/*

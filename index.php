@@ -7,7 +7,7 @@ if (isset($_POST['submit']))
 {
 	$whitelist = NULL;
 	$cleaner = new Html_cleaner();
-	$response = $cleaner->start_cleaning($_POST['text'], $whitelist);
+	$response = $cleaner->start_cleaning($_POST['text'], $whitelist, TRUE);
 }
 ?>
 <html>
@@ -27,8 +27,8 @@ if (isset($_POST['submit']))
 			this software.<br/>
 			<br/>
 			Regards,<br/>
-			Heini Ovason (<a href="https://github.com/heiniovason">Github.com/heiniovason</a>)<br/>
-			Mike Jensen (<a href="https://github.com/DonBananos">Github.com/DonBananos</a>)
+			Heini Ovason (<a href="https://github.com/heiniovason" target="blank">Github.com/heiniovason</a>)<br/>
+			Mike Jensen (<a href="https://github.com/DonBananos" target="blank">Github.com/DonBananos</a>)
 		</p>
 		<form action="" method="POST">
 			<textarea name="text" rows="10" cols="50" placeholder="Type a string for testing the PHP HTML Cleaner"></textarea><br/><br/>
@@ -39,9 +39,7 @@ if (isset($_POST['submit']))
 		{
 			?>
 			<hr>
-			<pre>
-				<?php echo $response ?>
-			</pre>
+			<pre><?php echo $response ?></pre>
 			<?php
 		}
 		?>
