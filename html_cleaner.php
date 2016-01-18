@@ -1,9 +1,13 @@
 <?php
 
+/*
+ * The PHP_HTML_cleaner is build by Heini Ovason and Mike Jensen under the
+ * MIT license. You're free to use, change and distribute the code, but can not
+ * hold the developers liable. See more in license.txt
+ */
 class Html_cleaner
 {
-
-	private $test_string = "<img=\"/blabla.jpg /><img='/blabla.jpg /><a=\"http://dajuwh/diadh/aedew.php></a><a='http://dajuwh/diadh/aedew.php></a><b></b><ul>Erkan</ul><script>alert('argh!!!');</script><script>alert('argh!!!');</script>";
+	private $test_string = "<p>A <b>Test</b> String<br/><ul><li>Test Point</li><li>Test Point2</li></ul></p>";
 	private $whitelist = array("p", "b", "ul", "li", "u", "a", "ol", "img", "i", "br", "/p", "/b", "/ul", "/li", "/u", "/a", "/ol", "/i", "br/", "br /");
 	private $string_to_clean = "";
 	//Setting the allowed img attributes
@@ -160,6 +164,7 @@ class Html_cleaner
 	{
 		/*
 		 * To remove an allowed attribute, comment out using //
+		 * To add an allowed attribute, remove // in start of line
 		 */
 		$this->img_values[] = "alt"; //Search Engines will hate you if you leave this out!
 		$this->img_values[] = "height";
@@ -172,6 +177,7 @@ class Html_cleaner
 	{
 		/*
 		 * To remove an allowed attribute, comment out using //
+		 * To add an allowed attribute, remove // in start of line
 		 */
 		//$this->a_values[] = "download";
 		$this->a_values[] = "href"; //Kind of important!
